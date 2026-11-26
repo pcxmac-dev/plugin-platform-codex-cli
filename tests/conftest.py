@@ -4,8 +4,8 @@ Nothing real is reached (the library's own guard, tests/conftest.py's `no_outsid
 started, a connection opened, a socket bound or a name resolved raises `Reached`, a BaseException that no `except
 Exception` of the code under test can swallow, and every reach is noted and fails the test at its end too. No program
 is found on PATH, the platform's folder is a temporary one, no variable Codex's launch drops is set, and every folder
-is this system's own disk (mounts.foreign, stood in for). The registry, /proc and the system's temporary folder are
-stand-ins too. Nothing is installed, downloaded or started: the plugin is driven with stand-ins for the web (a dict of
+is this system's own disk (mounts.foreign, stood in for). The registry, /proc, Codex's system files in /etc and the
+system's temporary folder are stand-ins too. Nothing is installed, downloaded or started: the plugin is driven with stand-ins for the web (a dict of
 addresses), the window's process, the login and the platform, each noting what it was given.
 
 The platform as a harness asks it (`App`): the model servers the plans name, as each says what it serves (`serving`,
@@ -117,6 +117,9 @@ def not_this_machine(monkeypatch, tmp_path):
                for p in (*constants.DROP, "LIMINAL_*")):
             monkeypatch.delenv(name, raising=False)
     monkeypatch.setenv("LIMINAL_PLATFORM_DIR", str(tmp_path / "platform"))
+    # Codex's system files, where this machine's /etc would hold them: none there unless a test puts one
+    monkeypatch.setattr(constants, "SYSTEM_FILES", tuple(str(tmp_path / "etc-codex" / Path(f).name)
+                                                         for f in constants.SYSTEM_FILES))
 
 
 # -- the platform, its login, a window ---------------------------------------------------------------------------------
