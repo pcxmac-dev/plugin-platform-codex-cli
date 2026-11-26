@@ -39,8 +39,10 @@ Use… turns it on), and keeps every pair of Liminal's out of what it starts. Wh
 """
 from __future__ import annotations
 
+import ntpath
 import os
 import platform as py_platform
+import posixpath
 import sys
 import tempfile
 import threading
@@ -345,8 +347,8 @@ class CodexCliPlugin(Harness):
         return build, ubr
 
     def mxc_state(self) -> tuple[str, str]:
-        """What this Windows' build says of MXC: ("listed" | "later" | "older" | "", the build as text). Codex decides by
-        its own probe at its start: this is the plugin's word beside it, the build against the ones MXC came with."""
+        """What this Windows' build says of MXC: ("listed" | "later" | "older" | "", the build as text). Codex decides
+        by its own probe at its start: this is the plugin's word beside it, the build against the ones MXC came with."""
         found = self.windows_build()
         if found is None:
             return "", ""
@@ -522,7 +524,10 @@ class CodexCliPlugin(Harness):
             return None
         parts = given.split(";" if windows else ":")
         if windows:
-            whole = [p for p in parts if p and (len(p) > 2 and p[1] == ":" and p[2] in "\\/" or p.startswith("\\\\"))]
+            def absolute(entry: str) -> bool:
+                bare = entry.strip().strip('"')
+                return len(bare) > 2 and bare[1] == ":" and bare[2] in "\\/" or bare.startswith("\\\\")
+            whole = [p for p in parts if absolute(p)]
         else:
             whole = [p for p in parts if p.startswith("/")]
         return None if len(whole) == len(parts) else (";" if windows else ":").join(whole)
@@ -551,9 +556,13 @@ class CodexCliPlugin(Harness):
         sandbox, network = self.sandbox_of(use), self.network_of(use)
         wiring = self.mcp_wiring(use)  # (None while Liminal's MCP is off; asked last: a refusal above asks nothing)
         mcp = None
-        if wiring is not None:
-            mcp = ({"url": wiring.url, "headers": dict(wiring.headers), "timeout_s": wiring.timeout_s}
-                   if wiring.wire == "http" else {"argv": wiring.argv, "timeout_s": wiring.timeout_s})
+        if wiring is not None and wiring.wire == "http":
+            mcp = {"url": wiring.url, "headers": dict(wiring.headers), "timeout_s": wiring.timeout_s}
+        elif wiring is not None:  # (a whole path: Codex looks a bare name up on its PATH, C-X1.4e)
+            whole = ntpath.isabs if self.system == "windows" else posixpath.isabs
+            if not wiring.argv or not whole(wiring.argv[0]):
+                raise Refusal(page.value_words("the MCP plugin's bridge is not named by a whole path"))
+            mcp = {"argv": wiring.argv, "timeout_s": wiring.timeout_s}
         try:
             words = files.overrides(system=self.system, sandbox=sandbox, network=network, model=use.model,
                                     base_url=address, context=context, keyed=bool(key), mcp=mcp)
@@ -576,9 +585,10 @@ class CodexCliPlugin(Harness):
         the newest first: (when written, bytes, path). TRANSCRIPTS_LOOKED files at the most. Looked at only."""
         found: list[tuple[float, int, Path]] = []
         for name in pins.TRANSCRIPTS:
-            top = self.codex_home() / name
-            for root, _, names in os.walk(top):
+            for root, _, names in os.walk(self.codex_home() / name):
                 for n in names:
+                    if len(found) >= pins.TRANSCRIPTS_LOOKED:
+                        break
                     if not pins.TRANSCRIPT.search(n):
                         continue
                     path = Path(root) / n
@@ -587,8 +597,6 @@ class CodexCliPlugin(Harness):
                     except OSError:
                         continue
                     found.append((st.st_mtime, st.st_size, path))
-                    if len(found) >= pins.TRANSCRIPTS_LOOKED:
-                        break
         return sorted(found, key=lambda t: (t[0], str(t[2])), reverse=True)
 
     def prune_transcripts(self) -> int:

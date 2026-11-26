@@ -98,4 +98,5 @@ DROP = ("ANTHROPIC_*", "OPENAI_*", "AZURE_OPENAI_*", "OPENROUTER_*", "GEMINI_*",
         "GOOGLE_GENERATIVE_AI_API_KEY", "MISTRAL_*", "GROQ_*", "DEEPSEEK_*", "XAI_*", "COHERE_*", "TOGETHER_*",
         "FIREWORKS_*", "PERPLEXITY_*", "HF_TOKEN", "OLLAMA_*", "LM_STUDIO_*", "HOSTED_VLLM_*", "LITELLM_*", "OTEL_*",
         "OPENCODE_*", "AIDER_*", "CONTINUE_*", "GOOSE_*", "CODEX_*")
-MAKERS = ("learn.chatgpt.com", "github.com", "platform.openai.com", "docs.ollama.com")  # the hosts of the pages its cards link (people's pages, never fetched)
+# the hosts of the pages its cards link (people's pages, never fetched)
+MAKERS = ("learn.chatgpt.com", "github.com", "platform.openai.com", "docs.ollama.com")

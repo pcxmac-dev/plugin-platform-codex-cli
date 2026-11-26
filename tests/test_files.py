@@ -61,7 +61,8 @@ def test_the_sandbox_and_the_network_chosen_are_written_and_elevated_never():
 
 
 def test_every_folder_is_marked_untrusted_whole_and_once():
-    folders = ["C:\\Users\\you\\project", "C:\\Users\\you\\other \"quoted\" one", "/home/you/x", "C:\\Users\\you\\project"]
+    folders = ["C:\\Users\\you\\project", "C:\\Users\\you\\other \"quoted\" one", "/home/you/x",
+               "C:\\Users\\you\\project"]
     parsed = tomllib.loads(files.config_toml(system="windows", folders=folders))
     assert list(parsed["projects"]) == folders[:3]
     assert all(v == {"trust_level": "untrusted"} for v in parsed["projects"].values())

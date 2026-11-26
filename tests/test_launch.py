@@ -257,6 +257,7 @@ def test_a_config_toml_that_cannot_be_read_back_is_written_whole_all_the_same(wi
 @pytest.mark.parametrize("system, given, whole", [
     ("windows", "C:\\Windows\\System32;;.;tools;C:\\tools;\\\\server\\share", "C:\\Windows\\System32;C:\\tools;"
                                                                               "\\\\server\\share"),
+    ("windows", "\"C:\\Program Files\\x\";bin", "\"C:\\Program Files\\x\""),
     ("linux", "/usr/bin::.:bin:/usr/local/bin", "/usr/bin:/usr/local/bin"),
 ])
 def test_a_path_entry_that_means_the_folder_is_left_out(tmp_path, project, system, given, whole):
@@ -293,16 +294,35 @@ def test_liminals_mcp_over_http_with_a_token_for_the_window_alone(tmp_path, proj
 
 def test_liminals_mcp_through_the_bridge_where_the_route_is_not_served(tmp_path, project):
     p = made(tmp_path, "linux", mcp=True, interactive=False)
-    p.app.offer = {**p.app.offer, "wires": ["stdio"], "endpoint": ""}
+    bridge = ["/usr/bin/python3", "-I", "-S", "/home/you/plugins/plugin-platform-mcp/bridge.py", "--port", "9775"]
+    p.app.offer = {**p.app.offer, "wires": ["stdio"], "endpoint": "", "bridge": bridge}
     installed(p)
     chosen(p, mcp="on")
     lines = p.command(str(project))["lines"]
     said = overridden(started(p, project).argv)
     assert said["mcp_servers"]["liminal"] == {
-        "command": BRIDGE[0], "args": BRIDGE[1:], "env_vars": ["LIMINAL_MCP_TOKEN"], "startup_timeout_sec": 30,
+        "command": bridge[0], "args": bridge[1:], "env_vars": ["LIMINAL_MCP_TOKEN"], "startup_timeout_sec": 30,
         "tool_timeout_sec": 110, "enabled": True}
     assert all(not children.not_passed(w) for w in started(p, project).argv)
     assert lines[-1].count("mcp_servers.liminal.command") == 1
+
+
+@pytest.mark.parametrize("system, bridge", [("windows", ["python.exe", *BRIDGE[1:]]),
+                                            ("linux", ["python3", "-I", "/x/bridge.py"]),
+                                            ("linux", BRIDGE)])  # (a Windows path is no whole path on Linux)
+def test_a_bridge_not_named_by_a_whole_path_is_refused(tmp_path, project, system, bridge):
+    p = made(tmp_path, system, mcp=True, interactive=False)
+    p.app.offer = {**p.app.offer, "wires": ["stdio"], "endpoint": "", "bridge": bridge}
+    installed(p)
+    chosen(p, mcp="on")
+    assert refused(lambda: p.command(str(project))) == ("Codex cannot be given what this start needs: the MCP "
+                                                        "plugin's bridge is not named by a whole path. Nothing was "
+                                                        "started")
+    on_windows = made(tmp_path / "w", "windows", mcp=True, interactive=False)
+    on_windows.app.offer = {**on_windows.app.offer, "wires": ["stdio"], "endpoint": ""}
+    installed(on_windows)
+    chosen(on_windows, mcp="on")
+    assert overridden(started(on_windows, project).argv)["mcp_servers"]["liminal"]["command"] == BRIDGE[0]
 
 
 def test_liminals_mcp_off_is_in_no_word(windows, project):

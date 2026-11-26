@@ -63,7 +63,8 @@ def test_before_you_use_it_for_ollama_on_windows_with_mxc(windows):
     assert "127.0.0.1:1455" in said["Its ports"] and said["Its ports"].startswith("It opens no port by itself here")
     assert "marked untrusted" in said["The folder's .codex"]
     model = said["The model"]
-    assert model.startswith(page.MODEL) and "LMDeploy has none" in model and "llama.cpp's is reported unreliable" in model
+    assert model.startswith(page.MODEL) and "LMDeploy has none" in model
+    assert "llama.cpp's is reported unreliable" in model
     assert "It is told 40,960 tokens of context (as Ollama / default says it). That is under the 65,536" in model
     assert "%USERPROFILE%\\.codex" in said["What it shares with a Codex of yours"]
     assert "written whole at each start" in said["Its configuration"]
@@ -94,8 +95,8 @@ def test_a_keyed_llama_cpp_a_remote_vllm_and_liminals_mcp(tmp_path):
     assert "It is told 65,536 tokens of context" in said["The model"]
     chosen(p, "vllm/box", "Qwen/Qwen3-8B", mcp="on")
     said = rows(p.status())
-    assert said["Plain http"] == ("vLLM / box is asked over plain http on another machine: prompts and code can be read "
-                                  "on the way.")
+    assert said["Plain http"] == ("vLLM / box is asked over plain http on another machine: prompts and code can be "
+                                  "read on the way.")
     assert said["Liminal's MCP"] == page.MCP and "Its commands are never given the token" in page.MCP
     assert said["Its sandbox"].startswith("On Linux its commands run in bubblewrap")
     assert "Here no bwrap is on PATH: Codex uses its package's own." in said["Its sandbox"]
@@ -152,8 +153,9 @@ def test_a_build_that_cannot_be_read_says_nothing(tmp_path):
 
 def test_a_policy_naming_codexs_requirements_is_a_problem(tmp_path):
     p = made(tmp_path, "windows", registry=Registry(policy="C:\\Policies\\codex-requirements.toml"))
-    assert p.status()["problem"] == ("a policy names Codex's requirements file (C:\\Policies\\codex-requirements.toml): "
-                                     "what it requires comes above what a start is told, and can choose its sandbox")
+    assert p.status()["problem"] == ("a policy names Codex's requirements file "
+                                     "(C:\\Policies\\codex-requirements.toml): what it requires comes above what a "
+                                     "start is told, and can choose its sandbox")
 
 
 @pytest.mark.parametrize("said, bwrap, why", [

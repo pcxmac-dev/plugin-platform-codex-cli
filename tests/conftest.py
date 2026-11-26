@@ -5,8 +5,9 @@ started, a connection opened, a socket bound or a name resolved raises `Reached`
 Exception` of the code under test can swallow, and every reach is noted and fails the test at its end too. No program
 is found on PATH, the platform's folder is a temporary one, no variable Codex's launch drops is set, and every folder
 is this system's own disk (mounts.foreign, stood in for). The registry, /proc, Codex's system files in /etc and the
-system's temporary folder are stand-ins too. Nothing is installed, downloaded or started: the plugin is driven with stand-ins for the web (a dict of
-addresses), the window's process, the login and the platform, each noting what it was given.
+system's temporary folder are stand-ins too. Nothing is installed, downloaded or started: the plugin is driven with
+stand-ins for the web (a dict of addresses), the window's process, the login and the platform, each noting what it
+was given.
 
 The platform as a harness asks it (`App`): the model servers the plans name, as each says what it serves (`serving`,
 with what each speaks): a found Ollama without a key, a llama.cpp with a key (its model listed without a context, its
@@ -350,9 +351,9 @@ PROGRAM_BYTES = {"windows": b"MZ a stand-in codex", "linux": b"\x7fELF a stand-i
 
 
 def members(system: str, top: str = "") -> dict[str, bytes | None]:
-    """Codex's package for `system` as scripts/codex_package/README.md lays it out, holding stand-ins: codex-package.json
-    beside bin/ (codex, its code mode host, its exec server), codex-resources/ (Windows' command runner and setup
-    helper; Linux's bwrap) and codex-path/rg; under the folder `top` where one is given."""
+    """Codex's package for `system` as scripts/codex_package/README.md lays it out, holding stand-ins:
+    codex-package.json beside bin/ (codex, its code mode host, its exec server), codex-resources/ (Windows' command
+    runner and setup helper; Linux's bwrap) and codex-path/rg; under the folder `top` where one is given."""
     exe = ".exe" if system == "windows" else ""
     at = f"{top}/" if top else ""
     out: dict[str, bytes | None] = {f"{at}codex-package.json": b'{"execServer": "bin/codex-exec-server"}',
