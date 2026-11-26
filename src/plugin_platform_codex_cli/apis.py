@@ -38,7 +38,7 @@ CODEX_API = Api(
            "plugin): its agent reads the folder, runs commands in its sandbox and edits files through a model of a "
            "provider's, with MCP servers for more tools. The plugin starts its own pinned copy in the folder you pick "
            "against one model server's instance, as a provider of its own that speaks the Responses API, its "
-           "commands in its sandbox (MXC on Windows unless you choose its unelevated one, never its elevated one; "
+           "commands in its sandbox (MXC on Windows, never its unelevated or elevated one; "
            "bubblewrap on Linux) with their network off unless you choose otherwise, asking before going beyond it. "
            "Its analytics, feedback, metrics, update check, web search, plugins and shared background server are "
            f"off; one call it makes by itself is not: its terminal screen fetches {ANNOUNCEMENT} at every start."),
@@ -67,7 +67,7 @@ CODEX_API = Api(
                       "--no-daemon and its settings for that start on its own command line (-c)")),
         Area("Its sandbox", "read-only, workspace-write or full access; on Windows MXC, unelevated or elevated; on "
                             "Linux bubblewrap; its commands' network", _SANDBOXING,
-             covered=("workspace-write; on Windows mxc unless you choose unelevated (Use…), never elevated; on Linux "
+             covered=("workspace-write; on Windows mxc, never unelevated or elevated; on Linux "
                       "bubblewrap; its commands' network off unless you choose it on")),
         Area("Approvals", "when it asks before acting: on-request, never, or by kind", _SECURITY,
              covered="on-request, written at every start; never is not offered"),

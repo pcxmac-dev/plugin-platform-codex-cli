@@ -143,7 +143,7 @@ def test_what_codex_inherits_drops_every_hosted_key_every_codex_and_openai_varia
 def test_its_sandbox_and_its_network_reach_codex_and_elevated_never(windows, project):
     p = windows
     installed(p)
-    for given, sandbox in ((None, "mxc"), ("mxc", "mxc"), ("unelevated", "unelevated"), ("elevated", "mxc")):
+    for given, sandbox in ((None, "mxc"), ("mxc", "mxc"), ("unelevated", "mxc"), ("elevated", "mxc")):
         chosen(p, **({"sandbox": given} if given else {}))
         said = overridden(started(p, project).argv)
         assert said["windows"] == {"sandbox": sandbox} and config(p)["windows"] == {"sandbox": sandbox}
@@ -157,6 +157,7 @@ def test_its_sandbox_and_its_network_reach_codex_and_elevated_never(windows, pro
 def test_use_refuses_a_sandbox_it_does_not_offer(windows):
     installed(windows)
     assert "elevated" in refused(lambda: windows.use("ollama/default", "qwen3:8b", None, "elevated"))
+    assert "unelevated" in refused(lambda: windows.use("ollama/default", "qwen3:8b", None, "unelevated"))
 
 
 def test_on_linux_no_windows_sandbox_is_written(linux, project):

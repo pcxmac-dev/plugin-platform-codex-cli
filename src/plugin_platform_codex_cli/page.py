@@ -21,8 +21,6 @@ CHECKED = ("It is checked against the sha256 pinned in this plugin, as GitHub's 
 NO_SERVER = "the model server you choose (Use…)"
 SANDBOX_WORDS = {
     "mxc": "mxc: Microsoft's MXC, its commands kept off the network and off this machine's own addresses",
-    "unelevated": ("unelevated: weaker; its commands can reach the network and this machine's own addresses, the "
-                   "platform's among them"),
     "bubblewrap": "bubblewrap: its commands in a namespace of their own",
 }
 ACTS = ("It acts as you, inside its sandbox (workspace-write): its commands read what you can read, write in the "
@@ -34,17 +32,10 @@ SANDBOX = {
             "account and no firewall rule of its own. With their network off they reach neither the network nor this "
             "machine's own addresses, so not the platform (MXC's policy denies the host's loopback; a real run "
             "confirms it). MXC also ends every program a command leaves running when that command ends. Where "
-            "Windows lacks MXC every command fails, with no other sandbox in its place. Its elevated sandbox, which "
-            "asks for administrator rights and adds accounts and firewall rules to the whole system, is never "
-            "chosen, set up or offered from here."),
-    "unelevated": ("On Windows its commands run in its unelevated sandbox (Use…, Sandbox: unelevated): a restricted "
-                   "token of yours, with access-control entries on the folders it lets them write (how to take "
-                   "them off again was not read). It is weaker: with their network off it only points them at a "
-                   "proxy that is not there, so a program that ignores proxy settings reaches the network, and every "
-                   "one reaches this machine's own addresses, the platform's among them, whose API runs what you can "
-                   "run, outside the sandbox. Its elevated sandbox is never chosen, set up or offered from here, but "
-                   "Codex itself offers it in this mode when you ask it for more (its /setup-default-sandbox): "
-                   "that is yours to refuse."),
+            "Windows lacks MXC every command fails, with no other sandbox in its place. Its unelevated sandbox, "
+            "whose commands reach this machine's own addresses and through the platform's API run what you can run, "
+            "and its elevated sandbox, which asks for administrator rights and adds accounts and firewall rules to "
+            "the whole system, are never chosen, set up or offered from here."),
     "linux": ("On Linux its commands run in bubblewrap: the first bwrap on PATH (one under the folder or one you can "
               "write is skipped), else the one its package brings, which needs unprivileged user namespaces. With "
               "their network off they run in a network namespace of their own, which reaches neither the network nor "
@@ -181,7 +172,7 @@ def open_words(*, system: str, sandbox: str, network: bool, window: bool) -> str
     """What Open…'s confirmation ends with (after a space): it acts as you in its sandbox and asks before going beyond
     it; its sandbox and its commands' network; its start-up fetch; its transcripts, pruned when a window opens."""
     if system == "windows":
-        box = {"mxc": "Microsoft's MXC", "unelevated": "its unelevated sandbox (weaker)"}.get(sandbox, "MXC")
+        box = "Microsoft's MXC"
     else:
         box = "bubblewrap"
     net = "on" if network else "off"
@@ -224,14 +215,13 @@ def mxc_words(state: str, build: str) -> str:
                 "expected here, not confirmed: Codex decides by a probe at its start.")
     if state == "older":
         return (f"This Windows ({build}) is older than the builds MXC came with (24H2 26100.9278, 25H2 26200.9278): "
-                "with mxc every command fails until Windows Update brings it, or choose unelevated under Use… "
-                "(weaker).")
+                "every command fails until Windows Update brings it.")
     return ""
 
 
 def mxc_problem(build: str) -> str:
     return (f"this Windows ({build}) has no MXC yet (it came with 26100.9278 and 26200.9278), and Codex's sandbox is "
-            "mxc: every command it runs fails. Update Windows, or choose unelevated under Use… (weaker)")
+            "mxc: every command it runs fails until Windows Update brings it")
 
 
 def userns_problem(why: str) -> str:

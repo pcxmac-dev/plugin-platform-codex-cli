@@ -15,8 +15,9 @@ liminal-libs 1.66.0's AI bases (`Harness`, plugin API 2.2), `SECTION = "ai"`, `G
   folder (`app/0.170.0`) as it is laid out, its sandbox's helpers looked for. ARM64 is said as not pinned. A Codex of
   yours is a fact, never run or touched. Its install scripts, npm and `codex sandbox setup` are never run.
 - **Use…, Open…, Command…** (the base's): one inference plugin's instance that speaks the Responses API, its model,
-  and Codex's options (Context; Sandbox on Windows: mxc or unelevated, never elevated; Network: off or on; Liminal's
-  MCP); `codex --no-daemon` in a window of its own, the lines to paste elsewhere. Approvals are `on-request`, always.
+  and Codex's options (Context; Sandbox on Windows: mxc alone, never unelevated or elevated; Network: off or on;
+  Liminal's MCP); `codex --no-daemon` in a window of its own, the lines to paste elsewhere. Approvals are
+  `on-request`, always.
 - **Configured at launch**, nothing written into a Codex of yours: its own `CODEX_HOME`, whose `config.toml` is written
   whole at every start (local only, its features that reach out or keep running off, its commands' environment
   without a pair of Liminal's, every folder untrusted, a `.env` beside it removed), and each start's choice on its

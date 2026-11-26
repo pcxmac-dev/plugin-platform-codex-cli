@@ -52,10 +52,10 @@ def test_config_toml_says_what_the_checks_name(system):
         assert absent not in parsed, absent  # (a start's own choice is on its command line)
 
 
-def test_the_sandbox_and_the_network_chosen_are_written_and_elevated_never():
-    parsed = tomllib.loads(files.config_toml(system="windows", sandbox="unelevated", network=True))
-    assert parsed["windows"] == {"sandbox": "unelevated"} and parsed["sandbox_workspace_write"]["network_access"]
-    for bad in ("elevated", "", "none"):
+def test_the_sandbox_and_the_network_chosen_are_written_and_never_another_than_mxc():
+    parsed = tomllib.loads(files.config_toml(system="windows", sandbox="mxc", network=True))
+    assert parsed["windows"] == {"sandbox": "mxc"} and parsed["sandbox_workspace_write"]["network_access"]
+    for bad in ("unelevated", "elevated", "", "none"):
         with pytest.raises(ValueError):
             files.config_toml(system="windows", sandbox=bad)
 
@@ -110,6 +110,7 @@ def test_every_word_powershell_5_1_hands_over_as_it_is():
 @pytest.mark.parametrize("given, what", [
     ({"model": "it's"}, "the model's id"), ({"model": "a\nb"}, "the model's id"), ({"model": ""}, "the model's id"),
     ({"base_url": HTTP + "x/'v1"}, "the server's address"), ({"sandbox": "elevated"}, "never 'elevated'"),
+    ({"sandbox": "unelevated"}, "never 'unelevated'"),
 ])
 def test_a_value_its_c_cannot_be_given_is_refused_in_words(given, what):
     with pytest.raises(ValueError) as caught:

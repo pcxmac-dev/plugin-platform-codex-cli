@@ -43,7 +43,7 @@ def test_before_you_use_it_for_ollama_on_windows_with_mxc(windows):
     box = said["Its sandbox"]
     assert box.startswith("On Windows its commands run in Microsoft's MXC (Use…, Sandbox: mxc)")
     assert "they reach neither the network nor this machine's own addresses, so not the platform" in box
-    assert "Its elevated sandbox, which asks for administrator rights" in box and "never chosen" in box
+    assert "its elevated sandbox, which asks for administrator rights" in box and "are never chosen" in box
     assert ("This Windows (26300.9974) is later than the builds MXC came with (26100.9278, 26200.9278), so MXC is "
             "expected here, not confirmed") in box
     assert box.endswith("Its commands' network is off (Use…, Network).")
@@ -70,18 +70,18 @@ def test_before_you_use_it_for_ollama_on_windows_with_mxc(windows):
     assert "written whole at each start" in said["Its configuration"]
 
 
-def test_the_unelevated_sandbox_is_said_as_weaker_and_the_network_on(windows):
+def test_a_kept_unelevated_choice_starts_mxc_and_the_network_on_is_said(windows):
     p = windows
     installed(p)
-    chosen(p, sandbox="unelevated", network="on")
+    chosen(p, sandbox="unelevated", network="on")  # (kept from before: it is no longer offered)
     status = p.status()
     box = rows(status)["Its sandbox"]
-    assert box.startswith("On Windows its commands run in its unelevated sandbox (Use…, Sandbox: unelevated)")
-    assert "It is weaker" in box and "the platform's among them, whose API runs what you can run" in box
-    assert "access-control entries" in box and "/setup-default-sandbox" in box
+    assert box.startswith("On Windows its commands run in Microsoft's MXC (Use…, Sandbox: mxc)")
+    assert "Its unelevated sandbox, whose commands reach this machine's own addresses" in box
+    assert "Microsoft's MXC" in page.open_words(system="windows", sandbox="unelevated", network=True, window=True)
     assert box.endswith("Its commands' network is on (Use…, Network): they reach the network and this machine's own "
                         "addresses, the platform's among them.")
-    assert status["sandbox"] == page.SANDBOX_WORDS["unelevated"]
+    assert status["sandbox"] == page.SANDBOX_WORDS["mxc"] and "unelevated" not in page.SANDBOX_WORDS
 
 
 def test_a_keyed_llama_cpp_a_remote_vllm_and_liminals_mcp(tmp_path):
@@ -141,8 +141,9 @@ def test_the_windows_build_against_the_ones_mxc_came_with(tmp_path, build, state
     assert p.mxc_state() == (state, f"{build[0]}.{build[1]}")
     problem = p.status().get("problem", "")
     assert ("has no MXC yet" in problem) is (state == "older")
-    chosen(p, sandbox="unelevated")
-    assert "has no MXC yet" not in p.status().get("problem", "")  # (it is not used)
+    chosen(p, sandbox="unelevated")  # kept from before: mxc is still the one used, and said
+    assert ("has no MXC yet" in p.status().get("problem", "")) is (state == "older")
+    assert "unelevated" not in p.status().get("problem", "")
 
 
 def test_a_build_that_cannot_be_read_says_nothing(tmp_path):

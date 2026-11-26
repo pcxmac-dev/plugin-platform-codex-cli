@@ -20,8 +20,8 @@ Use… turns it on), and keeps every pair of Liminal's out of what it starts. Wh
 - The start: `codex --no-daemon` in the folder, its CODEX_HOME the plugin's own (<home>/config/codex), whose
   config.toml is written whole at each start (files.config_toml: local only, every folder opened from here
   untrusted), and what that start is told on its command line (files.overrides: its approvals on-request, its
-  sandbox workspace-write with its commands' network off unless chosen on, on Windows MXC or the unelevated sandbox
-  and never the elevated one, the instance as a provider of its own speaking the Responses API, the model and its
+  sandbox workspace-write with its commands' network off unless chosen on, on Windows MXC and never the unelevated or
+  elevated one, the instance as a provider of its own speaking the Responses API, the model and its
   context, Liminal's MCP over HTTP or through its bridge where Use… turned it on). The instance's key, where one is
   kept, is in its environment alone; its commands are never given a pair of Liminal's.
 - Its transcripts: Codex saves every session's under CODEX_HOME/sessions and nothing turns that off in its terminal
@@ -126,12 +126,10 @@ class CodexCliPlugin(Harness):
                       f"server's word (Ollama's page advises {pins.ADVISED:,} at the least)")),
         Setting("sandbox", "Sandbox", "choice", "mxc",
                 choices=(("mxc", "mxc", "Microsoft's MXC: its commands kept off the network and off this machine's "
-                                        "own addresses; Windows 11 24H2 26100.9278, 25H2 26200.9278 or later"),
-                         ("unelevated", "unelevated",
-                          "weaker: its commands can reach the network and this machine's loopback, and through the "
-                          "platform's API run anything as you, outside the sandbox")),
-                note=("Windows alone (on Linux its commands run in bubblewrap): its elevated sandbox, which needs "
-                      "administrator rights and changes the whole system, is never offered")),
+                                        "own addresses; Windows 11 24H2 26100.9278, 25H2 26200.9278 or later"),),
+                note=("Windows alone (on Linux its commands run in bubblewrap), and MXC alone: its unelevated "
+                      "sandbox lets its commands reach this machine's loopback, the platform's API among it, and its "
+                      "elevated one needs administrator rights and changes the whole system; neither is offered")),
         Setting("network", "Network", "choice", "off",
                 choices=(("off", "off", "its commands reach neither the network nor this machine's own addresses"),
                          ("on", "on", "its commands reach the network and this machine's own addresses")),
@@ -162,7 +160,7 @@ class CodexCliPlugin(Harness):
              ("architecture", "x86-64", "part", "its install: only the x86-64 packages are pinned in 0.1.0"),
              ("desktop", "yes", "part", "its window on Windows; elsewhere Open… gives the lines to paste"),
              ("windows.build", ">=26100.9278 (24H2) or >=26200.9278 (25H2)", "part",
-              "MXC, its sandbox on Windows unless you choose the unelevated one (weaker)"),
+              "MXC, its sandbox on Windows: without it every command fails"),
              ("tool", "bwrap", "part", "bubblewrap on Linux (its package's own needs unprivileged user namespaces: "
                                        "linux.feature userns, proposed to the needs release)"),
              ("internet", "yes", "part", "its install, on a click"))
@@ -458,7 +456,7 @@ class CodexCliPlugin(Harness):
 
     @staticmethod
     def sandbox_of(use: Use | None) -> str:
-        """Its sandbox on Windows: what Use… chose, mxc where nothing is (or what is not offered: elevated among it)."""
+        """Its sandbox on Windows: mxc, whatever a Use… kept says (unelevated and elevated are not offered)."""
         said = str((use.options.get("sandbox") if use is not None else "") or "mxc")
         return said if said in pins.SANDBOXES else "mxc"
 

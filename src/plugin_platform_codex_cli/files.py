@@ -58,10 +58,10 @@ def _table(name: str, pairs: Iterable[tuple[str, str]]) -> list[str]:
 
 def config_toml(*, system: str, sandbox: str = "mxc", network: bool = False, folders: Iterable[str] = ()) -> str:
     """CODEX_HOME/config.toml as every start writes it: the keys that hold for every start (C-X1.1's overview), its
-    sandbox as the start's -c words say it too (on Windows `sandbox`, mxc or unelevated; its commands' `network`), the
+    sandbox as the start's -c words say it too (on Windows `sandbox`, mxc alone; its commands' `network`), the
     `folders` opened from here each marked untrusted (the newest first), `system` "windows" or "linux"."""
-    if sandbox not in ("mxc", "unelevated"):
-        raise ValueError(f"Codex's sandbox on Windows is mxc or unelevated here, never {sandbox!r}")
+    if sandbox != "mxc":
+        raise ValueError(f"Codex's sandbox on Windows is mxc here, never {sandbox!r}")
     top = [("approval_policy", basic("on-request")), ("sandbox_mode", basic("workspace-write")),
            ("web_search", basic("disabled")), ("check_for_update_on_startup", "false"),
            ("cli_auth_credentials_store", basic("ephemeral")), ("project_root_markers", "[]"),
@@ -102,13 +102,13 @@ def _pair(key: str, value: str) -> list[str]:
 
 def overrides(*, system: str, sandbox: str, network: bool, model: str, base_url: str, context: int, keyed: bool,
               mcp: Mapping | None = None) -> list[str]:
-    """The -c words of one start, in their order: its approvals and its sandbox (on Windows its mode, `sandbox`: mxc or
-    unelevated, never elevated), its commands' network (`network`), the model server as Codex's provider `liminal`
-    (`base_url`, the Responses API, the key by its variable where one is kept: `keyed`), the model and its context,
-    and Liminal's MCP where `mcp` gives it ({"url", "headers", "timeout_s"} or {"argv", "timeout_s"}). ValueError in
-    words for a value Codex's -c cannot be given as it is."""
-    if sandbox not in ("mxc", "unelevated"):
-        raise ValueError(f"Codex's sandbox on Windows is mxc or unelevated here, never {sandbox!r}")
+    """The -c words of one start, in their order: its approvals and its sandbox (on Windows its mode, `sandbox`: mxc
+    alone, never unelevated or elevated), its commands' network (`network`), the model server as Codex's provider
+    `liminal` (`base_url`, the Responses API, the key by its variable where one is kept: `keyed`), the model and its
+    context, and Liminal's MCP where `mcp` gives it ({"url", "headers", "timeout_s"} or {"argv", "timeout_s"}).
+    ValueError in words for a value Codex's -c cannot be given as it is."""
+    if sandbox != "mxc":
+        raise ValueError(f"Codex's sandbox on Windows is mxc here, never {sandbox!r}")
     words = [*_pair("approval_policy", "on-request"), *_pair("sandbox_mode", "workspace-write"),
              *_pair("sandbox_workspace_write.network_access", boolean(network))]
     if system == "windows":

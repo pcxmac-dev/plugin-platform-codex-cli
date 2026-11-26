@@ -31,7 +31,7 @@ harness, with no hook of its own. Valid wherever it runs: what a system lacks is
   scripts, npm, `codex login`, `codex mcp add`, `codex sandbox setup`. A Codex of yours (on PATH, `~/.codex`) is left
   as it is, never run.
 - **Use…, Open…, Command…** (the base's): one inference plugin's instance and its model, with Codex's options
-  (Context; Sandbox, on Windows: mxc or unelevated; Network: off or on; Liminal's MCP). There is no approvals choice:
+  (Context; Sandbox, on Windows: mxc alone; Network: off or on; Liminal's MCP). There is no approvals choice:
   `on-request` is written at every start (Codex no longer takes `untrusted`, `on-failure` is deprecated, and `never`
   is not offered). Open… opens `codex --no-daemon` in a window of its own where there is a desktop, the lines to paste
   elsewhere.
@@ -44,8 +44,8 @@ harness, with no hook of its own. Valid wherever it runs: what a system lacks is
 - **CODEX_HOME** is the plugin's own, `<home>/config/codex`. Its `config.toml` is written whole at every start
   (`files.config_toml`), what holds for every start:
   - `approval_policy = "on-request"`, `sandbox_mode = "workspace-write"`, `[sandbox_workspace_write] network_access`;
-  - on Windows `[windows] sandbox`, always written (with no mode Codex prefers its elevated one), `mxc` unless you
-    choose `unelevated`, never `elevated`; no `prefer_mxc`;
+  - on Windows `[windows] sandbox`, always written (with no mode Codex prefers its elevated one), `mxc` alone, never
+    `unelevated` or `elevated`; no `prefer_mxc`;
   - local only: `[analytics]` and `[feedback]` off, `[otel]` exporter, trace and metrics exporters `none`,
     `check_for_update_on_startup = false`, `web_search = "disabled"`, `cli_auth_credentials_store = "ephemeral"`
     (nothing kept, the keyring never read), `[history] persistence = "none"`;
@@ -83,14 +83,13 @@ harness, with no hook of its own. Valid wherever it runs: what a system lacks is
   Windows' build from the registry (`CurrentBuild`, `UBR`) and says it against them; a later build, like this PC's
   26300 (26H2), is expected to have it, not confirmed: Codex decides by its own probe. Where MXC is missing every
   command fails, with no other sandbox in its place, and the page says so as a problem.
-- **Windows, unelevated** (your choice under Use…): weaker. With its commands' network off it only points them at a
-  proxy that is not there, so a program that ignores proxy settings reaches the network, and every one reaches this
-  machine's own addresses, the platform's among them, whose API runs what you can run, outside the sandbox. It sets
-  access-control entries on the folders it lets them write.
+- **Never the unelevated sandbox** (the user's answer 5, "mxc, never elevated"): with its commands' network off it
+  only points them at a proxy that is not there, so a program that ignores proxy settings reaches the network, and
+  every one reaches this machine's own addresses, the platform's among them, whose API runs what you can run, outside
+  the sandbox. It is not offered under Use…, and a choice of it kept from before starts mxc.
 - **Never the elevated sandbox**: its setup asks for administrator rights and adds accounts, firewall rules and
   policy changes across the whole system, which an uninstall could not take back. It is never chosen, set up or
-  offered from here; in the unelevated sandbox Codex itself offers it when you ask it for more, which is yours to
-  refuse.
+  offered from here, and with `mxc` Codex never offers it itself.
 - **Linux, bubblewrap**: the first `bwrap` on PATH, else the package's own, which needs unprivileged user namespaces.
   The page reads `/proc/sys/user/max_user_namespaces`, `/proc/sys/kernel/unprivileged_userns_clone` and
   `/proc/sys/kernel/apparmor_restrict_unprivileged_userns` where they exist, and says as a problem a Linux that

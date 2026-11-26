@@ -76,9 +76,10 @@ def test_its_options_and_liminals_mcp():
     assert [s.name for s in p.OPTIONS] == ["context", "sandbox", "network", "mcp"]
     assert p.OPTIONS[-1] is harness.MCP_OPTION and p.MCP_WIRES == ("http", "stdio")
     sandbox = p.OPTIONS[1]
-    assert sandbox.default == "mxc" and [c[0] for c in sandbox.choices] == ["mxc", "unelevated"]
+    assert sandbox.default == "mxc" and [c[0] for c in sandbox.choices] == ["mxc"]
     assert "elevated" not in [c[0] for c in sandbox.choices]  # needs administrator rights, changes the system
-    assert "weaker" in sandbox.choices[1][2] and "run anything as you, outside the sandbox" in sandbox.choices[1][2]
+    assert "unelevated" not in [c[0] for c in sandbox.choices]  # its commands reach the platform (answer 5: mxc)
+    assert "the platform's API among it" in sandbox.note and "neither is offered" in sandbox.note
     network = p.OPTIONS[2]
     assert network.default == "off" and [c[0] for c in network.choices] == ["off", "on"]
     assert not any(s.name in ("approvals", "approval_policy") for s in p.OPTIONS)  # on-request, always written

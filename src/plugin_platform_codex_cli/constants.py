@@ -72,7 +72,7 @@ POLICY_KEY = "SOFTWARE\\Policies\\OpenAI\\Codex"  # HKLM: RequirementsPath, wher
 POLICY_VALUE = "RequirementsPath"
 
 # -- its sandbox -------------------------------------------------------------------------------------------------------
-SANDBOXES = ("mxc", "unelevated")  # [windows] sandbox, as offered: never "elevated", never left unset
+SANDBOXES = ("mxc",)  # [windows] sandbox (the user's answer 5): never "elevated", "unelevated" or unset
 # the Windows builds Microsoft's MXC came with (the Windows sandbox page: 24H2 26100.9278, 25H2 26200.9278 "or later"):
 # a build's lowest update (UBR) that has it. Codex itself decides by a probe at its start, never by the build
 MXC_BUILDS = {26100: 9278, 26200: 9278}

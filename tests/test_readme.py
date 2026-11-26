@@ -44,7 +44,7 @@ def test_the_readme_says_its_fetch_its_transcripts_and_its_ports_plainly():
 
 def test_the_readme_says_each_sandbox_and_never_the_elevated_one():
     said = words("README.md")
-    for item in ("**Windows, MXC** (the default)", "**Windows, unelevated** (your choice under Use…): weaker",
+    for item in ("**Windows, MXC** (the default)", "**Never the unelevated sandbox**",
                  "**Never the elevated sandbox**", "**Linux, bubblewrap**", "apparmor_restrict_unprivileged_userns",
                  "26100.9278", "26200.9278"):
         assert item in said, item
