@@ -134,7 +134,8 @@ what Use… keeps (without the platform it says so). Install, Uninstall, Use… 
 
 ## Where it is built
 
-A local repository (`pcxmac-dev`), built 2026-11-26 against liminal-libs 1.99.0 (`22515e3`); its floor is 1.66.0.
+A local repository (`pcxmac-dev`), built 2026-11-26 against liminal-libs 1.99.0 (`22515e3`); its floor is 1.99.0,
+the first whose harness base asks its changes (install, uninstall, use, open) only from the page.
 
 ## What was read in Codex's sources
 

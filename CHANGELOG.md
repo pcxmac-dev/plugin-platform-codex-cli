@@ -7,7 +7,8 @@ inference engines, top 4 agentic harnesses (open source)", "both linux and windo
 5, 6 and 8: its sandbox on Windows "mxc, never elevated", on Linux its bundled bubblewrap; its start-up fetch and its
 saved transcripts said plainly on its page, old transcripts pruned; the ports it opens by itself said). A harness on
 liminal-libs 1.66.0's AI bases (`Harness`, plugin API 2.2), `SECTION = "ai"`, `GROUP = "harness"`, `order = 523`,
-`ICON = "codexcli"`: the standard interface of a harness, with no hook of its own. Needs liminal-libs>=1.66.0.
+`ICON = "codexcli"`: the standard interface of a harness, with no hook of its own. Needs liminal-libs>=1.99.0, whose
+harness base asks its changes only from the page.
 
 - **Install, Update, Uninstall** from the page: Codex CLI 0.170.0's package for this system (Windows x64; Linux x64,
   a musl build for any Linux), pinned by name, size and sha256 as GitHub's record of the release gives them,

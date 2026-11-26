@@ -61,7 +61,7 @@ def test_the_readme_says_how_the_install_is_pinned_and_from_where():
 def test_the_changelog_names_its_release_and_the_users_words():
     changelog = words("CHANGELOG.md")
     assert changelog.startswith("# Changelog ## 0.1.0 (2026-11-26)")
-    assert '"mxc, never elevated"' in changelog and "Needs liminal-libs>=1.66.0." in changelog
+    assert '"mxc, never elevated"' in changelog and "Needs liminal-libs>=1.99.0," in changelog
 
 
 def test_no_line_is_longer_than_120_characters():
