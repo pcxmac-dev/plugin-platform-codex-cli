@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "plugin-platform-codex-cli"
+version = "0.1.0"  # the plugin's own release (CHANGELOG.md); the app shows it on the Plugins view
+description = "Codex CLI for Liminal: a pinned copy of OpenAI's open-source agent, started against a local model server."
+readme = "README.md"
+requires-python = ">=3.11"
+# the library it plugs into: liminal-libs 1.66.0's harness base (machines/ai.py and machines/harness.py: the install's
+# job, Use…, Open… and Command…, Liminal's MCP for a harness, its values checked, no pair of Liminal's in what it
+# starts), what a serving row says it speaks (machines/modelserver.py), its pinned download (machines/download.py)
+# and Codex's mark in icons.js
+dependencies = ["liminal-libs>=1.66.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.entry-points."liminal.providers"]
+codex-cli = "plugin_platform_codex_cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
