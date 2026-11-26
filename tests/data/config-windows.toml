@@ -1,0 +1,46 @@
+# Written whole by Liminal's Codex CLI plugin at every start: an edit here lasts until the next one.
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "disabled"
+check_for_update_on_startup = false
+cli_auth_credentials_store = "ephemeral"
+project_root_markers = []
+allow_login_shell = false
+
+[sandbox_workspace_write]
+network_access = false
+
+[windows]
+sandbox = "mxc"
+
+[features]
+daemon_auto_start = false
+plugins = false
+remote_plugin = false
+apps = false
+tool_suggest = false
+skill_mcp_dependency_install = false
+
+[analytics]
+enabled = false
+
+[feedback]
+enabled = false
+
+[otel]
+exporter = "none"
+trace_exporter = "none"
+metrics_exporter = "none"
+
+[history]
+persistence = "none"
+
+[shell_environment_policy]
+inherit = "core"
+ignore_default_excludes = false
+set = { NoDefaultCurrentDirectoryInExePath = "1" }
+
+[shell_environment_policy.filters]
+"LIMINAL_*" = "exclude"
+"CODEX_*" = "exclude"
+"OPENAI_*" = "exclude"
