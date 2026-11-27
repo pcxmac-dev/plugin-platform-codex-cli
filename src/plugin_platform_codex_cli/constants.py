@@ -64,6 +64,9 @@ TRANSCRIPT = re.compile(r"\.jsonl(?:\.zst)?$")
 TRANSCRIPTS_KEPT = 50  # the newest transcripts kept at each Open… (the user, 2026-11-25: "the plugin prunes them")
 TRANSCRIPTS_BYTES = 200_000_000  # and no more than this many bytes of them, the newest first
 TRANSCRIPTS_LOOKED = 100_000  # files looked at, at the most, in one pruning
+# a transcript written within this long is never removed (0.1.1; the review of item 14, P3-5): a Codex started from
+# Command…'s lines is no window of the plugin's, and on Linux a file it holds open is unlinked all the same
+TRANSCRIPTS_FRESH_S = 24 * 3600.0
 PROJECTS_KEPT = 256  # folders kept untrusted in config.toml, the newest first
 # Codex's system files beneath (config.toml) and above (requirements.toml: managed settings, which can force its
 # elevated sandbox) what a start is told, on Linux; on Windows the requirements' path a policy names

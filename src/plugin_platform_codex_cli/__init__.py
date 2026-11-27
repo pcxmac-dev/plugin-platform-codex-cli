@@ -600,11 +600,17 @@ class CodexCliPlugin(Harness):
     def prune_transcripts(self) -> int:
         """Older transcripts removed: all but the newest TRANSCRIPTS_KEPT, and past TRANSCRIPTS_BYTES of them (the
         newest first), then the folders that held them, if empty. Nothing while one of its windows is open (a
-        session may be writing its own). The files removed."""
+        session may be writing its own), and never a transcript written within TRANSCRIPTS_FRESH_S (0.1.1): a Codex
+        started from Command…'s lines is no window of the plugin's, and may be writing it (it is kept, and counted
+        among the newest). The files removed."""
         if self.running():
             return 0
+        now = self.out.clock()
         kept = total = removed = 0
-        for _, size, path in self.transcripts():
+        for written, size, path in self.transcripts():
+            if now - written < pins.TRANSCRIPTS_FRESH_S:  # (a time ahead of the clock's, too)
+                kept, total = kept + 1, total + size
+                continue
             if kept < pins.TRANSCRIPTS_KEPT and total + size <= pins.TRANSCRIPTS_BYTES:
                 kept, total = kept + 1, total + size
                 continue

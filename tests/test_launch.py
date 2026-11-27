@@ -335,7 +335,9 @@ def test_liminals_mcp_off_is_in_no_word(windows, project):
 
 # -- its transcripts --------------------------------------------------------------------------------------------------
 def transcripts(p, count: int, size: int = 10, folder: str = "sessions") -> list[Path]:
-    """`count` stand-in transcripts, the oldest first, laid out as Codex lays them out (sessions/YYYY/MM/DD)."""
+    """`count` stand-in transcripts, the oldest first, laid out as Codex lays them out (sessions/YYYY/MM/DD), each
+    written days before the clock's now (which it moves on to 10,000,000 s): none is too fresh to prune."""
+    p.out.clock.now = max(p.out.clock.now, 10_000_000.0)
     made_ = []
     for n in range(count):
         path = p.codex_home() / folder / "2026" / "11" / f"{n % 28 + 1:02d}" / f"rollout-{n:04d}.jsonl"
@@ -372,6 +374,23 @@ def test_transcripts_past_their_bytes_go_too_and_archived_ones_count(windows, pr
     assert p.prune_transcripts() == 2 and newer == []
     assert path.exists() and [x.exists() for x in older] == [False, False, True]
     assert not (p.codex_home() / "archived_sessions" / "2026" / "11" / "01").exists()  # (its empty folder gone)
+
+
+@pytest.mark.parametrize("system", ["windows", "linux"])
+def test_a_transcript_written_lately_is_never_pruned_though_past_what_is_kept(tmp_path, monkeypatch, system):
+    """A Codex started from Command…'s lines is no window of the plugin's: its transcript, written a minute ago and
+    alone past the bytes kept, stays (on Linux it would be unlinked while Codex holds it open); the old ones go."""
+    p = made(tmp_path, system)
+    installed(p)
+    chosen(p)
+    old = transcripts(p, 3, size=100)
+    live = p.codex_home() / "sessions" / "2026" / "11" / "27" / "rollout-live.jsonl"
+    live.parent.mkdir(parents=True, exist_ok=True)
+    live.write_bytes(b"x" * 500)
+    os.utime(live, (p.out.clock() - 60, p.out.clock() - 60))
+    monkeypatch.setattr(constants, "TRANSCRIPTS_BYTES", 250)
+    assert not p.running()
+    assert p.prune_transcripts() == 3 and live.exists() and not any(x.exists() for x in old)
 
 
 def test_no_transcript_is_removed_by_command_or_while_a_window_is_open(windows, project):

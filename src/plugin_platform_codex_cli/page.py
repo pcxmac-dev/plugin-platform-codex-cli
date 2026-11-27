@@ -49,7 +49,8 @@ FETCH = (f"Its terminal screen fetches {ANNOUNCEMENT} from GitHub at every start
 TRANSCRIPTS = ("Codex saves every session's transcript (your prompts, its answers, the commands it ran and what they "
                "said) under {home}, in sessions and archived_sessions, and no setting of its terminal screen turns "
                f"this off. The plugin keeps the newest {TRANSCRIPTS_KEPT} ({TRANSCRIPTS_BYTES // 1_000_000} MB at the "
-               "most) and removes older ones as each Open… opens a window, while none of its windows is open. Codex "
+               "most) and removes older ones as each Open… opens a window, while none of its windows is open, never "
+               "one written within the last day (a Codex started from Command…'s lines may be writing it). Codex "
                "also keeps a log database there, which it caps itself (10 MiB a part) and nothing turns off; no "
                "prompt history is kept.")
 LOCAL = ("The one model server it is given is {server}, as a provider of its own (liminal). Its analytics, its "
