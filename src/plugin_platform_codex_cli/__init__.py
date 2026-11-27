@@ -62,7 +62,7 @@ from . import constants as pins
 from . import files, page
 from .apis import APIS, CODEX, DOWNLOADS
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 LIBS_FLOOR = "1.99.0"  # pyproject's floor: the base's changes page-only (1.99.0), the Responses check (1.66.0)
 
 

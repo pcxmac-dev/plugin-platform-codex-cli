@@ -104,7 +104,8 @@ harness, with no hook of its own. Valid wherever it runs: what a system lacks is
 - **Its transcripts**: Codex saves every session's transcript (your prompts, its answers, the commands it ran and what
   they said) under `CODEX_HOME/sessions` and `archived_sessions`, and no setting of its terminal screen turns this
   off. The plugin keeps the newest 50 (200 MB at the most) and removes older ones as each Open… opens a window, while
-  none of its windows is open; Command… removes nothing. Codex also keeps a log database there, which it caps itself
+  none of its windows is open, never one written within the last day (a Codex started from Command…'s lines may be
+  writing it); Command… removes nothing. Codex also keeps a log database there, which it caps itself
   (10 MiB a part) and nothing turns off. No prompt history is kept.
 - **Its ports**: none opened by itself here. Its own sign-in (`codex login`, never run from here) would listen on
   `127.0.0.1:1455`, an MCP server's sign-in on a port of the system's choosing (not used: Liminal's MCP takes a token),
